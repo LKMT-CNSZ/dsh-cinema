@@ -1,0 +1,17 @@
+{
+  "name": "dsh-cinema",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Procedural documentary cinema: a metric 3D world painted with Canvas 2D, a real camera, a skeleton-driven figure, and a QA sweep. Rendered frame by frame in headless Chrome, encoded with ffmpeg.",
+  "type": "commonjs",
+  "scripts": {
+    "sheet": "node render.mjs --sheet=0.2,2.6,5.0,7.4,9.8 --cols=5 --w=480 --out=out/check/sheet.jpg",
+    "video": "node render.mjs --frames --workers=3 && node render.mjs --encode --out=out/film.mp4",
+    "qa": "node render.mjs --qa --out=out/qa",
+    "audio": "node audio/score.mjs"
+  },
+  "dependencies": {
+    "puppeteer-core": "^25.11.0"
+  }
+}

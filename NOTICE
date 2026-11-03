@@ -1,0 +1,27 @@
+# NOTICE — DSH Cinema
+
+DSH Cinema (skill name `dsh-cinema`) is an original work: every engine module, material routine, camera model, character
+rig, audio synthesiser and QA rule in this repository was written for this project. No third-party source code is vendored
+or copied into the tree.
+
+## Runtime dependencies (not vendored)
+
+| component | how it is used | licence |
+|---|---|---|
+| [puppeteer-core](https://github.com/puppeteer/puppeteer) | drives headless Chrome to rasterise frames; installed by `npm install` in a scaffolded project | Apache-2.0 |
+| [Chrome / Chromium](https://www.chromium.org/) | the rasteriser itself; already installed on the machine, never redistributed | BSD-3-Clause and others |
+| [FFmpeg](https://ffmpeg.org/) | encodes frames to H.264/AAC and muxes the mix; invoked as an external binary | LGPL-2.1-or-later / GPL depending on build; this project only *calls* it |
+
+Because FFmpeg is invoked as a separate process rather than linked, its licence does not extend to this project. If you
+bundle FFmpeg with your own distribution, follow its licence terms.
+
+## Artistic references
+
+The visual language is informed by documentary photography, minimalist and experimental cinema, and modern installation
+art as *traditions*. No director's shot, no photographer's frame and no artwork is reproduced, traced or copied. The films
+in `examples/` are generated entirely by the code in `template/` and are covered by the same MIT licence.
+
+## Prior name
+
+This project was developed as `documentary-code-cinema` and renamed to `dsh-cinema` at v1.0.0. The skill content is the
+same work; the rename is recorded in `CHANGELOG.md` so existing users can follow it.

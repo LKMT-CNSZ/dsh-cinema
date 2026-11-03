@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>dsh-cinema · studio</title>
+<style>
+  html, body { margin: 0; background: #14151a; color: #d8d8d8; font: 13px/1.4 ui-monospace, "Cascadia Mono", Consolas, monospace; }
+  main { padding: 10px; display: grid; gap: 8px; }
+  #out { width: min(100%, 1400px); aspect-ratio: 16 / 9; height: auto; background: #000; display: block; image-rendering: auto; }
+  .bar { display: flex; gap: 10px; align-items: center; max-width: 1400px; }
+  #scrub { flex: 1; accent-color: #b98a55; }
+  #label { min-width: 420px; color: #9a9a9a; font-variant-numeric: tabular-nums; white-space: pre; }
+  .hint { color: #6a6a6a; max-width: 1400px; }
+</style>
+</head>
+<body>
+<main>
+  <canvas id="out" width="1920" height="1080"></canvas>
+  <div class="bar">
+    <input id="scrub" type="range" min="0" max="12" step="0.0416666" value="0">
+    <span id="label">loading…</span>
+  </div>
+  <p class="hint">&#8592; &#8594; step 0.1 s (hold shift for one frame). ?t=3.2 jumps, ?shot=2 jumps to a shot's start.</p>
+</main>
+<!-- ===== project config (first: W/H/FPS live here) ===== -->
+<script src="src/config.js"></script>
+<!-- ===== engine ===== -->
+<script src="src/engine/math.js"></script>
+<script src="src/engine/color.js"></script>
+<script src="src/engine/lighting.js"></script>
+<script src="src/engine/camera.js"></script>
+<script src="src/engine/materials.js"></script>
+<script src="src/engine/renderer.js"></script>
+<script src="src/engine/sky.js"></script>
+<script src="src/engine/post.js"></script>
+<script src="src/engine/timeline.js"></script>
+<script src="src/engine/qa.js"></script>
+<script src="src/engine/registry.js"></script>
+<script src="src/engine/layers.js"></script>
+<script src="src/engine/budget.js"></script>
+<script src="src/engine/ambient.js"></script>
+<!-- ===== things that occupy space: a figure, a bird, the props ===== -->
+<script src="src/engine/character.js"></script>
+<script src="src/engine/bird.js"></script>
+<script src="src/engine/props.js"></script>
+<!-- ===== the film's shared assets: one definition per character, prop, place ===== -->
+<script src="src/world.js"></script>
+<script src="src/world/environment.js"></script>
+<script src="src/world/characters.js"></script>
+<script src="src/world/props.js"></script>
+<script src="src/world/cameras.js"></script>
+<script src="src/world/panorama.js"></script>
+<!-- ===== shots, in time order (order does not matter: each declares its start) ===== -->
+<script src="src/shots/s1_field.js"></script>
+<script src="src/shots/s2_approach.js"></script>
+<script src="src/shots/s3_hands.js"></script>
+<script src="src/shots/s4_flight.js"></script>
+<script src="src/shots/s5_after.js"></script>
+<!-- ===== the 2.5D film: the default route ===== -->
+<script src="src/shots/w1_field.js"></script>
+<script src="src/shots/w2_close.js"></script>
+<!-- ===== boot ===== -->
+<script src="src/engine/main.js"></script>
+</body>
+</html>
+
+
+
+

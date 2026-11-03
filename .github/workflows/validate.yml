@@ -1,0 +1,89 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: skill contract (${{ matrix.os }}, node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Skill tree, frontmatter, references and BOMs
+        run: node scripts/render-check.mjs
+
+      - name: Machine-readable result
+        if: always()
+        run: node scripts/render-check.mjs --json
+
+      - name: Frontmatter must be parseable by the DSH loader's rules
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const { readFileSync } = require('node:fs');
+          const text = readFileSync('SKILL.md', 'utf8');
+          const fm = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(text);
+          if (!fm) { console.error('SKILL.md has no frontmatter'); process.exit(1); }
+          const body = fm[1];
+          const name = (/^name:[ \t]*(.+)$/m.exec(body) || [])[1];
+          const desc = (/^description:[ \t]*(.+)$/m.exec(body) || [])[1];
+          if (!name || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(name.trim())) { console.error('bad name:', name); process.exit(1); }
+          if (!desc || desc.trim().length === 0) { console.error('missing description'); process.exit(1); }
+          if (/^(modelInvocable|userInvocable|disableModelInvocation|allowed-tools|argument-hint):/m.test(body)) {
+            console.error('frontmatter uses a key DSH rejects'); process.exit(1);
+          }
+          console.log('frontmatter ok:', name.trim(), '(' + desc.trim().length + ' chars)');
+          NODE
+
+      - name: Forbidden artefacts must not be committed
+        shell: bash
+        run: |
+          bad=0
+          for p in node_modules out package-lock.json; do
+            if [ -e "$p" ]; then echo "::error::committed artefact: $p"; bad=1; fi
+          done
+          if git ls-files | grep -E '\.(mp4|wav|m4a)$' | grep -v '^examples/'; then echo "::error::renders committed outside examples/"; bad=1; fi
+          exit $bad
+
+  template-smoke:
+    name: template QA (ubuntu, node 22)
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install the one dependency
+        working-directory: template
+        run: npm install --no-audit --no-fund
+
+      - name: Install Chrome for Testing
+        working-directory: template
+        run: npx puppeteer browsers install chrome
+
+      - name: Render one still (proves the engine boots)
+        working-directory: template
+        run: node render.mjs --stills=2.0 --film=wind --chrome="$(node -e "const p=require('puppeteer');p.executablePath&&console.log(p.executablePath())")" || node render.mjs --stills=2.0 --film=wind
+
+      - name: Upload the still
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: still-${{ github.sha }}
+          path: template/out/check/*.png
+          if-no-files-found: warn

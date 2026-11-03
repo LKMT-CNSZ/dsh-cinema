@@ -1,0 +1,31 @@
+[
+ {
+  "name": "gust arrives",
+  "t": 1.2
+ },
+ {
+  "name": "grass rustle",
+  "t": 2.1
+ },
+ {
+  "name": "bird call",
+  "t": 3.62
+ },
+ {
+  "name": "strings swell",
+  "t": 5
+ },
+ {
+  "name": "wood creak",
+  "t": 6.2
+ },
+ {
+  "name": "second gust",
+  "t": 8.6
+ },
+ {
+  "name": "end of wind",
+  "t": 11.95,
+  "fade": true
+ }
+]

@@ -1,0 +1,22 @@
+# dependencies and builds
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+
+# renders and review artefacts
+out/
+*.mp4
+*.mov
+*.wav
+*.m4a
+!examples/**/*.jpg
+
+# editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# local scratch
+*.log
+check/
